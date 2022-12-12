@@ -15,3 +15,14 @@ Imports allow us to effectively re-use previously created playbooks in a new pla
 Refactoring is a general term in computer programming. It means making changes to the source code without changing the expected behavior of the software. The main idea of refactoring is to enhance code readability, increase maintainability and extensibility, reduce complexity, and add proper comments without affecting the logic.
 
 In this case, we would move things around a little bit in the code, but the overall state of the infrastructure would remain the same.
+
+
+## Prerequisites
+- Infrastructure: AWS.
+- Web Servers: Linux Red Hat.
+- Database Server: Ubuntu 20.04 + MySQL.
+- Storage Server: Red Hat 8 + NFS.
+- Load Balancer: Ubuntu 20.04 (Nginx).
+- Jenkins Server.
+- Configure Ansible.
+- Source Code: Download from <a href="https://github.com/manny-uncharted/ansible-config-mgt.git">here</a>.
