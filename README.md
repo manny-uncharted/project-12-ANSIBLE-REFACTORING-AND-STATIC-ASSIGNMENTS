@@ -40,4 +40,14 @@ sudo mkdir /home/ubuntu/ansible-config-artifact
 
 Results:
 
-![make a directory to store build artifacts](img/)
+![make a directory to store build artifacts](img/ansible-config-artifact.png)
+
+- Change permissions to this directory, so that Jenkins can write to it.
+
+```
+chmod -R 0777 /home/ubuntu/ansible-config-artifact
+```
+
+Results:
+
+![change permissions to the directory](img/change-permissions.png)
