@@ -112,4 +112,111 @@ Results:
 
 ![create a new branch](img/create-a-new-branch.png)
 
-- Within the 'playbooks' directory, 
+- Within the 'playbooks' directory, create a new file and name it 'site.yml'. This file will now be considered an entry point into the entire infrastructure configuration. Other playbooks will be included here as a reference. In other words, 'site.yml' will become a parent to all other playbooks that will be developed. Including 'common.yml' that you created previously.
+
+Results:
+
+![create a new file](img/create-a-new-file.png)
+
+- Create a new folder in the root of the repository and name it 'static-assignments'. The static-assignments folder will contain all other children notebooks. This makes it easy to organize our work. It is not a concept specific to Ansible alone, this allows us to decide how we want to organize our work.
+
+Results:
+
+![create a new folder](img/create-a-new-folder.png)
+
+- Move 'common.yml' file into the newly created 'static-assignments' folder.
+
+Results:
+
+![move common.yml file](img/move-common-yml-file.png)
+
+- Inside 'site.yml' file, import common.yml playbook.
+
+```
+---
+- hosts: all
+- import_playbook: ../static-assignments/common.yml
+```
+
+Results:
+
+![import common.yml playbook](img/import-common-yml-playbook.png)
+
+Our folder structure is expected to look like this:
+
+```
+├── static-assignments
+│   └── common.yml
+├── inventory
+    └── dev
+    └── stage
+    └── uat
+    └── prod
+└── playbooks
+    └── site.yml
+
+```
+
+- Run ansible-playbook command against the dev environment.
+Since we need to apply some tasks to our dev servers and Wireshark is already installed from the previous project. We would need to create another playbook under the static-assignments and name it 'common-del.yml'. In this playbook, we will remove Wireshark from our dev servers.
+
+```yaml
+---
+- name: update web, nfs and db servers
+  hosts: webservers, nfs, db
+  remote_user: ec2-user
+  become: yes
+  become_user: root
+  tasks:
+  - name: delete wireshark
+    yum:
+      name: wireshark
+      state: removed
+
+- name: update LB server
+  hosts: lb
+  remote_user: ubuntu
+  become: yes
+  become_user: root
+  tasks:
+  - name: delete wireshark
+    apt:
+      name: wireshark-qt
+      state: absent
+      autoremove: yes
+      purge: yes
+      autoclean: yes
+```
+
+Then commit your changes and push them to the remote branch refactor and then create a pull request and merge it to the master/main branch.
+
+Results:
+
+![create common-del.yml playbook](img/create-common-del-yml-playbook.png)
+
+- update site.yml file to include common-del.yml playbook.
+
+```
+- import_playbook: ../static-assignments/common-del.yml
+```
+instead of common.yml and run it against dev servers.
+
+```
+ansible-playbook -i inventory/dev playbooks/site.yml
+```
+
+Results:
+
+![run ansible-playbook command](img/run-ansible-playbook-command.png)
+
+- Ensure that wireshark is removed from all the servers by running the following command.
+
+```
+wireshark --version
+```
+
+Results:
+
+![wireshark removed](img/wireshark-removed.png)
+
+In this section we have learned how to use 'import_playbooks' module and we have a ready solution to install/delete packages on multiple servers with just one command.
