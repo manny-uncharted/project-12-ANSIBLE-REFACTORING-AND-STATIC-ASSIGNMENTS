@@ -6,8 +6,8 @@
     - [Code Refactoring](#code-refactoring)
 - [Prerequisites](#prerequisites)
 - [Jenkins Job Enhancement](#jenkins-job-enhancement)
-
 - [Refactor Ansible Code by Importing Other Playbooks into Site.yml](#refactor-ansible-code-by-importing-other-playbooks-into-siteyml)
+- [Configure UAT webservers with a Role 'Webserver'](#configure-uat-webservers-with-a-role-webserver)
 
 
 ## Introduction
@@ -219,4 +219,71 @@ Results:
 
 ![wireshark removed](img/wireshark-removed.png)
 
-In this section we have learned how to use 'import_playbooks' module and we have a ready solution to install/delete packages on multiple servers with just one command.
+In this section, we have learned how to use 'import_playbooks' module and we have a ready solution to install/delete packages on multiple servers with just one command.
+
+
+## Configure UAT webservers with a Role 'Webserver'
+
+We have our nice and clean 'dev' environment, so we want to configure 2 new Web Servers as 'uat (User Acceptance Testing)', UAT is a testing stage that occurs after the development phase and before the production phase. It is a final test to ensure that the software is ready to be deployed to production. In this section, we will create a new role 'webserver' and configure our UAT servers with it.
+
+- Launch 2 new EC2 instances using RHEL 8 image and name them 'uat-web1' and 'uat-web2'.
+
+Results:
+
+![launch 2 new EC2 instances](img/launch-2-new-ec2-instances.png)
+
+- To create a role, you must create a directory called roles/, relative to the playbook file or in /etc/ansible/ directory.
+There are two ways how you can create this folder structure:
+
+  - Use an Ansible utility called ansible-galaxy inside the ansible-config-mgt/roles directory (you need to create the roles directory upfront)
+
+```
+mkdir roles
+cd roles
+ansible-galaxy init webserver
+```
+
+  - Create the directory/files structure manually
+Note: You can choose either way, but since you store all your codes in GitHub, it is recommended to create folders and files there rather than locally on the Jenkins-Ansible server.
+
+The entire folder structure should look like the below, but if you create it manually – you can skip creating tests, files, and vars or remove them if you used ansible-galaxy
+
+```
+└── webserver
+    ├── README.md
+    ├── defaults
+    │   └── main.yml
+    ├── files
+    ├── handlers
+    │   └── main.yml
+    ├── meta
+    │   └── main.yml
+    ├── tasks
+    │   └── main.yml
+    ├── templates
+    ├── tests
+    │   ├── inventory
+    │   └── test.yml
+    └── vars
+        └── main.yml
+```
+
+After removing unnecessary directories and files, the structure of the roles should look like this:
+
+```
+└── webserver
+    ├── README.md
+    ├── defaults
+    │   └── main.yml
+    ├── handlers
+    │   └── main.yml
+    ├── meta
+    │   └── main.yml
+    ├── tasks
+    │   └── main.yml
+    └── templates
+```
+
+Results:
+
+![create webserver role](img/create-webserver-role.png)
